@@ -6,57 +6,79 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mi Tienda</title>
+<title>Tienda de Tarjetas</title>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
+background:#f4f4f4;
+}
+
+/* PORTADA */
+
+.portada{
+
+height:350px;
 background-image:url("fondo.jpg");
 background-size:cover;
 background-position:center;
-background-attachment:fixed;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:40px;
+font-weight:bold;
+text-shadow:2px 2px 10px black;
+
 }
 
-header{
-background:#ff6b81;
-color:white;
-text-align:center;
-padding:20px;
-}
+/* BUSCADOR */
 
 #buscador{
+
 width:80%;
-padding:10px;
-margin:20px auto;
+max-width:400px;
 display:block;
+margin:30px auto;
+padding:12px;
 font-size:16px;
 border-radius:5px;
 border:1px solid #ccc;
+
 }
 
+/* PRODUCTOS */
+
 .container{
+
 display:grid;
 grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
 gap:20px;
 padding:20px;
+
 }
 
 .producto{
+
 background:white;
 padding:15px;
 border-radius:10px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
 text-align:center;
+
 }
 
 .producto img{
+
 width:100%;
 border-radius:8px;
+
 }
 
 button{
+
 background:#25D366;
 color:white;
 border:none;
@@ -64,11 +86,14 @@ padding:10px;
 border-radius:5px;
 cursor:pointer;
 margin-top:10px;
+
 }
 
 input{
+
 width:60px;
 padding:5px;
+
 }
 
 /* BOTON CARRITO */
@@ -139,13 +164,13 @@ margin-left:10px;
 
 <body>
 
-<header>
+<!-- PORTADA -->
 
-<h1>Rincon de Papel</h1>
+<div class="portada">
 
-<p>Catálogo</p>
+Mi Tienda de Tarjetas
 
-</header>
+</div>
 
 <input type="text" id="buscador" placeholder="Buscar tarjeta...">
 
@@ -169,7 +194,7 @@ margin-left:10px;
 
 <ul id="listaCarrito"></ul>
 
-<button onclick="enviarPedido()">Enviar pedido por WhatsApp</button>
+<button onclick="enviarPedido()">Enviar pedido</button>
 
 </div>
 
@@ -181,15 +206,13 @@ let carrito=[]
 
 const productos=[
 
-{nombre:"Tarjeta Cumple niños ",imagen:"https://via.placeholder.com/200"},
-{nombre:"Tarjeta baby Shower",imagen:"https://via.placeholder.com/200"},
+{nombre:"Tarjeta Globos",imagen:"https://via.placeholder.com/200"},
+{nombre:"Tarjeta Torta",imagen:"https://via.placeholder.com/200"},
 {nombre:"Tarjeta Infantil",imagen:"https://via.placeholder.com/200"},
 {nombre:"Tarjeta Flores",imagen:"https://via.placeholder.com/200"},
 {nombre:"Tarjeta Cumple Feliz",imagen:"https://via.placeholder.com/200"}
 
 ]
-
-// MOSTRAR PRODUCTOS
 
 function mostrarProductos(lista){
 
@@ -223,8 +246,6 @@ contenedor.innerHTML+=`
 
 mostrarProductos(productos)
 
-// AGREGAR PRODUCTO
-
 function agregar(i){
 
 let cantidad=document.getElementById("cant"+i).value
@@ -232,7 +253,6 @@ let cantidad=document.getElementById("cant"+i).value
 carrito.push({
 
 nombre:productos[i].nombre,
-
 cantidad:cantidad
 
 })
@@ -240,8 +260,6 @@ cantidad:cantidad
 actualizarCarrito()
 
 }
-
-// ACTUALIZAR CARRITO
 
 function actualizarCarrito(){
 
@@ -267,8 +285,6 @@ document.getElementById("contador").innerText=carrito.length
 
 }
 
-// ELIMINAR
-
 function eliminar(i){
 
 carrito.splice(i,1)
@@ -276,8 +292,6 @@ carrito.splice(i,1)
 actualizarCarrito()
 
 }
-
-// ABRIR / CERRAR
 
 let abierto=false
 
@@ -288,20 +302,16 @@ let panel=document.getElementById("carrito")
 if(abierto){
 
 panel.style.right="-320px"
-
 abierto=false
 
 }else{
 
 panel.style.right="0"
-
 abierto=true
 
 }
 
 }
-
-// ENVIAR PEDIDO
 
 function enviarPedido(){
 
@@ -318,8 +328,6 @@ let url=`https://wa.me/${telefono}?text=${mensaje}`
 window.open(url)
 
 }
-
-// BUSCADOR
 
 document.getElementById("buscador").addEventListener("keyup",function(){
 
