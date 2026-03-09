@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Tienda de Tarjetas</title>
+<title>Tienda</title>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-background:#f4f4f4;
+background:#f5f5f5;
 }
 
-/* PORTADA */
+/* FOTO DE PORTADA */
 
-.portada{
+.hero{
 height:350px;
-background-image:url("fondo.jpg");
+background:url("fondo.jpg");
 background-size:cover;
 background-position:center;
 }
@@ -28,351 +24,276 @@ background-position:center;
 /* PRODUCTOS */
 
 .container{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-gap:20px;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
 padding:20px;
 }
 
-.producto{
+.card{
 background:white;
-padding:15px;
+width:220px;
+margin:10px;
 border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
+box-shadow:0 0 10px rgba(0,0,0,0.2);
 text-align:center;
+padding:10px;
 }
 
-.producto img{
+.card img{
 width:100%;
-border-radius:8px;
+border-radius:10px;
 }
 
-button{
+.card button{
 background:#25D366;
 color:white;
 border:none;
 padding:10px;
+margin-top:10px;
 border-radius:5px;
 cursor:pointer;
-margin-top:10px;
 }
 
 /* FORMULARIO */
 
-.datosCliente{
-text-align:center;
-padding:30px;
+.formulario{
 background:white;
-margin:20px;
+max-width:500px;
+margin:30px auto;
+padding:20px;
 border-radius:10px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
+box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
-.datosCliente input,
-.datosCliente select{
-
+.formulario input,
+.formulario select{
+width:100%;
 padding:10px;
-margin:6px;
-font-size:15px;
+margin-top:10px;
 border-radius:5px;
 border:1px solid #ccc;
-width:200px;
-
 }
 
 /* BOTON CARRITO */
 
-#botonCarrito{
+.botonCarrito{
 position:fixed;
 bottom:20px;
 right:20px;
 background:#25D366;
 color:white;
 border:none;
-padding:15px 20px;
+padding:15px;
 border-radius:50px;
-font-size:18px;
+font-size:16px;
 cursor:pointer;
-box-shadow:0 4px 10px rgba(0,0,0,0.3);
-}
-
-#contador{
-background:red;
-color:white;
-border-radius:50%;
-padding:4px 8px;
-font-size:12px;
-margin-left:5px;
 }
 
 /* PANEL CARRITO */
 
-#carrito{
+.carritoPanel{
 position:fixed;
-right:-320px;
+right:-350px;
 top:0;
-width:300px;
+width:350px;
 height:100%;
 background:white;
 box-shadow:-3px 0 10px rgba(0,0,0,0.2);
 padding:20px;
+transition:0.4s;
 overflow:auto;
-transition:0.3s;
 }
 
-.eliminar{
-background:red;
-margin-left:10px;
+.carritoPanel.activo{
+right:0;
+}
+
+.cerrar{
+font-size:20px;
+cursor:pointer;
+float:right;
+}
+
+/* RESUMEN */
+
+.resumen{
+background:white;
+max-width:600px;
+margin:30px auto;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+display:none;
+}
+
+.resumen button{
+background:#25D366;
+color:white;
+border:none;
+padding:12px;
+margin-top:10px;
+border-radius:5px;
+cursor:pointer;
+width:100%;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div class="portada"></div>
+<div class="hero"></div>
 
-<div class="container" id="productos"></div>
+<!-- PRODUCTOS -->
 
-<!-- FORMULARIO DE CLIENTE -->
+<div class="container">
 
-<div class="datosCliente">
+<div class="card">
+<img src="producto1.jpg">
+<h3>Tarjeta 1</h3>
+<button onclick="agregar('Tarjeta 1')">Agregar</button>
+</div>
 
-<h2>Datos para el pedido</h2>
+<div class="card">
+<img src="producto2.jpg">
+<h3>Tarjeta 2</h3>
+<button onclick="agregar('Tarjeta 2')">Agregar</button>
+</div>
+
+<div class="card">
+<img src="producto3.jpg">
+<h3>Tarjeta 3</h3>
+<button onclick="agregar('Tarjeta 3')">Agregar</button>
+</div>
+
+</div>
+
+<!-- FORMULARIO -->
+
+<div class="formulario">
 
 <input type="text" id="nombre" placeholder="Nombre">
+
 <input type="text" id="apellido" placeholder="Apellido">
 
-<br>
-
 <label>Fecha de evento</label>
-<br>
-<input type="date" id="fechaEvento">
+<input type="date" id="fecha">
 
-<br>
-
-<select id="entrega" onchange="mostrarDireccion()">
+<select id="entrega" onchange="direccionMostrar()">
 <option value="">Forma de entrega</option>
-<option value="Retiro en local">Retiro en local</option>
-<option value="Envío a domicilio">Envío a domicilio</option>
+<option>Retiro en local</option>
+<option>Envío a domicilio</option>
 </select>
 
 <div id="direccionBox" style="display:none">
-
-<input type="text" id="direccion" placeholder="Dirección de envío">
-
+<input type="text" id="direccion" placeholder="Dirección">
 </div>
 
 </div>
 
 <!-- BOTON CARRITO -->
 
-<button id="botonCarrito" onclick="toggleCarrito()">
-
-🛒 Carrito <span id="contador">0</span>
-
+<button class="botonCarrito" onclick="abrirCarrito()">
+🛒 Carrito
 </button>
 
 <!-- PANEL CARRITO -->
 
-<div id="carrito">
+<div class="carritoPanel" id="carrito">
+
+<span class="cerrar" onclick="cerrarCarrito()">✖</span>
 
 <h2>Carrito</h2>
 
-<ul id="listaCarrito"></ul>
+<ul id="lista"></ul>
 
-<button onclick="enviarPedido()">Enviar pedido</button>
+<button onclick="verResumen()">Ver resumen</button>
+
+</div>
+
+<!-- RESUMEN -->
+
+<div class="resumen" id="resumen">
+
+<h2>Resumen del pedido</h2>
+
+<div id="datos"></div>
+
+<button onclick="enviarWhats()">Enviar pedido por WhatsApp</button>
 
 </div>
 
 <script>
 
-const telefono="5493815441312"
-
 let carrito=[]
 
-const productos=[
+function agregar(producto){
 
-{nombre:"Tarjeta Globos",imagen:"https://via.placeholder.com/200"},
-{nombre:"Tarjeta Torta",imagen:"https://via.placeholder.com/200"},
-{nombre:"Tarjeta Infantil",imagen:"https://via.placeholder.com/200"},
-{nombre:"Tarjeta Flores",imagen:"https://via.placeholder.com/200"},
-{nombre:"Tarjeta Cumple Feliz",imagen:"https://via.placeholder.com/200"}
+carrito.push(producto)
 
-]
+let lista=document.getElementById("lista")
 
-function mostrarProductos(lista){
+let li=document.createElement("li")
 
-const contenedor=document.getElementById("productos")
+li.textContent=producto
 
-contenedor.innerHTML=""
-
-lista.forEach((p,i)=>{
-
-contenedor.innerHTML+=`
-
-<div class="producto">
-
-<img src="${p.imagen}">
-
-<h3>${p.nombre}</h3>
-
-<input type="number" id="cant${i}" value="1" min="1">
-
-<br>
-
-<button onclick="agregar(${i})">Agregar</button>
-
-</div>
-
-`
-
-})
+lista.appendChild(li)
 
 }
 
-mostrarProductos(productos)
-
-function agregar(i){
-
-let cantidad=document.getElementById("cant"+i).value
-
-carrito.push({
-
-nombre:productos[i].nombre,
-cantidad:cantidad
-
-})
-
-actualizarCarrito()
-
+function abrirCarrito(){
+document.getElementById("carrito").classList.add("activo")
 }
 
-function actualizarCarrito(){
-
-let lista=document.getElementById("listaCarrito")
-
-lista.innerHTML=""
-
-let total=0
-
-carrito.forEach((p,i)=>{
-
-total+=parseInt(p.cantidad)
-
-lista.innerHTML+=`
-
-<li>${p.nombre} x${p.cantidad}
-
-<button class="eliminar" onclick="eliminar(${i})">X</button>
-
-</li>
-
-`
-
-})
-
-document.getElementById("contador").innerText=total
-
+function cerrarCarrito(){
+document.getElementById("carrito").classList.remove("activo")
 }
 
-function eliminar(i){
-
-carrito.splice(i,1)
-
-actualizarCarrito()
-
-}
-
-let abierto=false
-
-function toggleCarrito(){
-
-let panel=document.getElementById("carrito")
-
-if(abierto){
-
-panel.style.right="-320px"
-abierto=false
-
-}else{
-
-panel.style.right="0"
-abierto=true
-
-}
-
-}
-
-function mostrarDireccion(){
+function direccionMostrar(){
 
 let entrega=document.getElementById("entrega").value
 
-if(entrega==="Envío a domicilio"){
-
+if(entrega=="Envío a domicilio"){
 document.getElementById("direccionBox").style.display="block"
-
 }else{
-
 document.getElementById("direccionBox").style.display="none"
-
 }
 
 }
 
-function enviarPedido(){
+function verResumen(){
 
-let nombre=document.getElementById("nombre").value.trim()
-let apellido=document.getElementById("apellido").value.trim()
-let fecha=document.getElementById("fechaEvento").value
+let nombre=document.getElementById("nombre").value
+let apellido=document.getElementById("apellido").value
+let fecha=document.getElementById("fecha").value
 let entrega=document.getElementById("entrega").value
 let direccion=document.getElementById("direccion").value
 
-if(nombre==="" || apellido==="" || fecha==="" || entrega===""){
+let productos=carrito.join(", ")
 
-alert("Complete los datos del cliente")
+let texto=
+`
+<b>Cliente:</b> ${nombre} ${apellido}<br>
+<b>Fecha evento:</b> ${fecha}<br>
+<b>Entrega:</b> ${entrega}<br>
+<b>Dirección:</b> ${direccion}<br><br>
+<b>Productos:</b><br>${productos}
+`
 
-return
+document.getElementById("datos").innerHTML=texto
 
-}
+document.getElementById("resumen").style.display="block"
 
-if(entrega==="Envío a domicilio" && direccion===""){
-
-alert("Ingrese la dirección")
-
-return
-
-}
-
-if(carrito.length===0){
-
-alert("El carrito está vacío")
-
-return
+cerrarCarrito()
 
 }
 
-let mensaje="PEDIDO TARJETAS%0A"
-mensaje+="--------------------%0A"
+function enviarWhats(){
 
-mensaje+=`Cliente: ${nombre} ${apellido}%0A`
-mensaje+=`Fecha evento: ${fecha}%0A`
-mensaje+=`Entrega: ${entrega}%0A`
+let datos=document.getElementById("datos").innerText
 
-if(entrega==="Envío a domicilio"){
-mensaje+=`Dirección: ${direccion}%0A`
-}
-
-mensaje+="%0AProductos:%0A"
-
-carrito.forEach(p=>{
-
-mensaje+=`• ${p.nombre} x${p.cantidad}%0A`
-
-})
-
-let url=`https://wa.me/${telefono}?text=${mensaje}`
+let url="https://wa.me/5493815441312?text="+encodeURIComponent(datos)
 
 window.open(url)
 
@@ -381,5 +302,4 @@ window.open(url)
 </script>
 
 </body>
-
 </html>
