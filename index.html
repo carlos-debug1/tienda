@@ -17,7 +17,10 @@
 body{
 margin:0;
 font-family:'Poppins',sans-serif;
-background:url("fondo.jpg") top center/cover no-repeat fixed;
+
+/* FONDO FIJO */
+
+background:url("fondo.jpg") center top / cover no-repeat fixed;
 }
 
 /* CONTENEDOR */
@@ -40,9 +43,14 @@ gap:25px;
 .card{
 width:280px;
 background:white;
-border-radius:10px;
+border-radius:12px;
 overflow:hidden;
-box-shadow:0 6px 15px rgba(0,0,0,0.2);
+box-shadow:0 6px 15px rgba(0,0,0,0.25);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
 }
 
 .card img{
@@ -72,9 +80,10 @@ margin-bottom:10px;
 }
 
 .qty button{
-padding:5px 12px;
+padding:6px 12px;
 border:none;
-background:#ddd;
+background:black;
+color:white;
 border-radius:5px;
 cursor:pointer;
 }
@@ -82,6 +91,8 @@ cursor:pointer;
 .qty input{
 width:50px;
 text-align:center;
+border:1px solid #ccc;
+border-radius:4px;
 }
 
 /* BOTON AGREGAR */
@@ -90,24 +101,25 @@ text-align:center;
 margin:10px;
 padding:10px 16px;
 border:none;
-background:#25D366;
+background:black;
 color:white;
-border-radius:20px;
+border-radius:25px;
 cursor:pointer;
+width:90%;
 }
 
 /* FORMULARIO CLIENTE */
 
 .formulario{
 margin-top:60px;
-max-width:400px;
+max-width:420px;
 margin-left:auto;
 margin-right:auto;
-background:rgba(255,255,255,0.15);
+background:rgba(255,255,255,0.2);
 backdrop-filter:blur(10px);
-padding:20px;
-border-radius:12px;
-color:white;
+padding:25px;
+border-radius:14px;
+color:black;
 text-align:center;
 }
 
@@ -127,12 +139,13 @@ font-family:'Poppins';
 position:fixed;
 right:20px;
 bottom:20px;
-background:#25D366;
+background:black;
 color:white;
 border:none;
-padding:14px 20px;
+padding:14px 22px;
 border-radius:30px;
 cursor:pointer;
+font-size:16px;
 }
 
 /* PANEL CARRITO */
@@ -152,6 +165,16 @@ overflow:auto;
 
 .carritoPanel.activo{
 right:0;
+}
+
+.carritoPanel h2{
+margin-top:0;
+}
+
+.total{
+font-weight:bold;
+margin-top:20px;
+font-size:18px;
 }
 
 /* ZOOM */
@@ -234,6 +257,8 @@ Ver dirección de retiro
 
 <ul id="lista"></ul>
 
+<div class="total" id="total"></div>
+
 <button onclick="enviarWhats()">Enviar pedido</button>
 
 </div>
@@ -246,16 +271,14 @@ Ver dirección de retiro
 
 let carrito={}
 
-/* CARGAR PRODUCTOS EXCEL */
+/* CARGAR PRODUCTOS DESDE EXCEL */
 
 fetch("productos.xlsx")
 .then(res=>res.arrayBuffer())
 .then(data=>{
 
 let workbook=XLSX.read(data)
-
 let hoja=workbook.Sheets[workbook.SheetNames[0]]
-
 let productos=XLSX.utils.sheet_to_json(hoja)
 
 let cont=document.getElementById("productos")
@@ -306,7 +329,7 @@ let q=document.getElementById("q"+i)
 if(q.value>1) q.value=parseInt(q.value)-1
 }
 
-/* AGREGAR CARRITO */
+/* AGREGAR AL CARRITO */
 
 function agregar(nombre,precio,i){
 
@@ -329,22 +352,24 @@ actualizarCarrito()
 function actualizarCarrito(){
 
 let lista=document.getElementById("lista")
-
 lista.innerHTML=""
 
 let total=0
+let dinero=0
 
 for(let p in carrito){
 
 let item=carrito[p]
 
-lista.innerHTML+=`<li>${p} x${item.cantidad}</li>`
+lista.innerHTML+=`<li>${p} x${item.cantidad} = $${item.cantidad*item.precio}</li>`
 
 total+=item.cantidad
+dinero+=item.cantidad*item.precio
 
 }
 
 document.getElementById("contador").innerText=total
+document.getElementById("total").innerText="Total: $"+dinero
 
 }
 
@@ -367,7 +392,6 @@ let tipo=document.getElementById("entrega").value
 if(tipo=="Retiro"){
 
 document.getElementById("direccionEnvio").style.display="none"
-
 document.getElementById("retiroLink").style.display="block"
 
 }
@@ -375,7 +399,6 @@ document.getElementById("retiroLink").style.display="block"
 if(tipo=="Envio"){
 
 document.getElementById("direccionEnvio").style.display="block"
-
 document.getElementById("retiroLink").style.display="none"
 
 }
@@ -387,19 +410,13 @@ document.getElementById("retiroLink").style.display="none"
 function enviarWhats(){
 
 let nombre=document.getElementById("nombre").value
-
 let apellido=document.getElementById("apellido").value
-
 let fecha=document.getElementById("fecha").value
-
 let entrega=document.getElementById("entrega").value
-
 let direccion=document.getElementById("direccionEnvio").value
 
 let texto="Cliente: "+nombre+" "+apellido+"\n"
-
 texto+="Fecha evento: "+fecha+"\n"
-
 texto+="Entrega: "+entrega+"\n"
 
 if(entrega=="Envio") texto+="Direccion: "+direccion+"\n"
@@ -418,12 +435,11 @@ window.open(url)
 
 }
 
-/* ZOOM */
+/* ZOOM IMAGEN */
 
 function verImagen(src){
 
 document.getElementById("modal").style.display="flex"
-
 document.getElementById("imgGrande").src=src
 
 }
