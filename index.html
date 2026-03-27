@@ -6,11 +6,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tienda de Tarjetas</title>
+<title>Tienda Profesional</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-<!-- ICONOS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -23,7 +22,7 @@ font-family:'Poppins',sans-serif;
 background:url("fondo.jpg") center top / cover no-repeat fixed;
 }
 
-/* CONTENEDOR */
+/* ESPACIO SUPERIOR PARA VER FONDO */
 
 .main{
 max-width:1100px;
@@ -47,6 +46,11 @@ background:white;
 border-radius:12px;
 overflow:hidden;
 box-shadow:0 6px 15px rgba(0,0,0,0.25);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-8px) scale(1.02);
 }
 
 .card img{
@@ -55,6 +59,20 @@ height:200px;
 object-fit:cover;
 cursor:pointer;
 }
+
+/* ANIMACION AGREGAR */
+
+.added{
+animation:pop .3s;
+}
+
+@keyframes pop{
+0%{transform:scale(1)}
+50%{transform:scale(1.1)}
+100%{transform:scale(1)}
+}
+
+/* TEXTO */
 
 .card h3{margin:10px;}
 .card p{margin:10px;font-weight:600;}
@@ -101,14 +119,14 @@ margin-top:60px;
 max-width:420px;
 margin:auto;
 background:rgba(255,255,255,0.2);
-backdrop-filter:blur(10px);
-padding:20px;
-border-radius:12px;
+backdrop-filter:blur(12px);
+padding:25px;
+border-radius:14px;
 color:black;
 text-align:center;
 }
 
-/* CARRITO */
+/* BOTON CARRITO */
 
 .botonCarrito{
 position:fixed;
@@ -122,6 +140,8 @@ border-radius:30px;
 cursor:pointer;
 }
 
+/* PANEL */
+
 .carritoPanel{
 position:fixed;
 right:-400px;
@@ -131,9 +151,15 @@ height:100%;
 background:white;
 padding:20px;
 transition:.4s;
+overflow:auto;
 }
 
 .carritoPanel.activo{right:0;}
+
+.total{
+font-weight:bold;
+margin-top:15px;
+}
 
 /* BOTONES FLOTANTES */
 
@@ -162,6 +188,7 @@ text-decoration:none;
 
 .fb{background:#1877f2;}
 .ig{background:#E1306C;}
+.wa{background:#25D366;}
 .top{background:black;}
 
 /* ZOOM */
@@ -196,8 +223,7 @@ align-items:center;
 
 <input id="nombre" placeholder="Nombre">
 <input id="apellido" placeholder="Apellido">
-
-<input type="date" id="fecha">
+<input type="date" id="fecha de evento">
 
 <select id="entrega" onchange="cambiarEntrega()">
 <option value="">Entrega</option>
@@ -222,16 +248,26 @@ Ver ubicación
 </button>
 
 <div class="carritoPanel" id="carrito">
+
 <button onclick="cerrarCarrito()">Cerrar</button>
+
 <h2>Resumen</h2>
+
 <ul id="lista"></ul>
-<div id="total"></div>
-<button onclick="enviarWhats()">Enviar</button>
+
+<div class="total" id="total"></div>
+
+<button onclick="enviarWhats()">Enviar pedido</button>
+
 </div>
 
-<!-- BOTONES REDES -->
+<!-- BOTONES FLOTANTES -->
 
 <div class="floating">
+
+<a href="https://wa.me/5493815441312" target="_blank" class="wa">
+<i class="fab fa-whatsapp"></i>
+</a>
 
 <a href="https://www.facebook.com/people/Rinc%C3%B3n-De-Papel/pfbid0kmZgn3bUoNfYRjuHyStwSuS87XV2XXkY8GzQe1Cc1We6hBbYZtnB4ESqVs4nJELtl/?rdid=V92py2pdPxvPdup7&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1AwXXoDEQQ%2F" target="_blank" class="fb">
 <i class="fab fa-facebook-f"></i>
@@ -241,7 +277,7 @@ Ver ubicación
 <i class="fab fa-instagram"></i>
 </a>
 
-<a href="#" onclick="scrollToTop()" class="top">
+<a href="#" onclick="scrollTopSmooth()" class="top">
 <i class="fas fa-arrow-up"></i>
 </a>
 
@@ -271,7 +307,7 @@ productos.forEach((p,i)=>{
 
 cont.innerHTML+=`
 
-<div class="card">
+<div class="card" id="card${i}">
 
 <img src="${p.imagen}" onclick="verImagen('${p.imagen}')">
 
@@ -316,6 +352,12 @@ carrito[nombre].cantidad+=cantidad
 carrito[nombre]={precio:precio,cantidad:cantidad}
 }
 
+document.getElementById("card"+i).classList.add("added")
+
+setTimeout(()=>{
+document.getElementById("card"+i).classList.remove("added")
+},300)
+
 actualizar()
 }
 
@@ -340,6 +382,7 @@ dinero+=item.cantidad*item.precio
 
 document.getElementById("contador").innerText=total
 document.getElementById("total").innerText="Total: $"+dinero
+
 }
 
 function abrirCarrito(){
@@ -374,9 +417,7 @@ texto+=p+" x"+carrito[p].cantidad+"\n"
 window.open("https://wa.me/5493815441312?text="+encodeURIComponent(texto))
 }
 
-/* SCROLL ARRIBA */
-
-function scrollToTop(){
+function scrollTopSmooth(){
 window.scrollTo({top:0,behavior:'smooth'})
 }
 
