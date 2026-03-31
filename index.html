@@ -8,7 +8,6 @@
 <title>Tienda PRO</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -20,8 +19,6 @@ margin:0;
 font-family:'Poppins',sans-serif;
 background:url("fondo.jpg") center/cover fixed;
 }
-
-/* ESPACIO PARA FONDO */
 
 .main{
 max-width:1100px;
@@ -45,6 +42,7 @@ background:white;
 border-radius:10px;
 overflow:hidden;
 box-shadow:0 5px 15px rgba(0,0,0,0.2);
+position:relative;
 }
 
 /* GALERIA */
@@ -61,6 +59,43 @@ height:200px;
 object-fit:cover;
 flex-shrink:0;
 scroll-snap-align:center;
+cursor:pointer;
+}
+
+/* INDICADORES */
+
+.indicadores{
+position:absolute;
+bottom:8px;
+width:100%;
+text-align:center;
+}
+
+.indicadores span{
+display:inline-block;
+width:8px;
+height:8px;
+margin:3px;
+background:white;
+border-radius:50%;
+opacity:0.5;
+}
+
+.indicadores span.activo{
+opacity:1;
+}
+
+/* ICONO SWIPE */
+
+.swipeIcon{
+position:absolute;
+top:10px;
+right:10px;
+background:rgba(0,0,0,0.5);
+color:white;
+padding:4px 8px;
+border-radius:10px;
+font-size:12px;
 }
 
 /* CANTIDAD */
@@ -166,6 +201,25 @@ text-decoration:none;
 .ig{background:#E1306C;}
 .top{background:black;}
 
+/* ZOOM */
+
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.modal img{
+max-width:90%;
+}
+
 </style>
 
 </head>
@@ -224,7 +278,7 @@ Ver ubicación de retiro
 
 </div>
 
-<!-- BOTONES FLOTANTES -->
+<!-- BOTONES -->
 
 <div class="floating">
 
@@ -244,6 +298,10 @@ Ver ubicación de retiro
 <i class="fas fa-arrow-up"></i>
 </a>
 
+</div>
+
+<div class="modal" id="modal" onclick="cerrarImagen()">
+<img id="imgGrande">
 </div>
 
 <script>
@@ -266,13 +324,25 @@ productos.forEach((p,i)=>{
 
 let imgs=p.imagen.split(",")
 
-let galeria=imgs.map(img=>`<img src="${img.trim()}">`).join("")
+let galeria=imgs.map(img=>`
+<img src="${img.trim()}" onclick="verImagen('${img.trim()}')">
+`).join("")
+
+let dots=imgs.map((_,d)=>`<span class="${d==0?'activo':''}"></span>`).join("")
 
 cont.innerHTML+=`
 
 <div class="card">
 
-<div class="galeria">${galeria}</div>
+<div class="galeria" onscroll="actualizarDots(this, ${i})">
+${galeria}
+</div>
+
+<div class="indicadores" id="dots${i}">
+${dots}
+</div>
+
+<div class="swipeIcon">↔</div>
 
 <h3>${p.nombre}</h3>
 <p>$${p.precio}</p>
@@ -294,6 +364,27 @@ Agregar
 })
 
 })
+
+function actualizarDots(galeria,i){
+
+let index=Math.round(galeria.scrollLeft/galeria.clientWidth)
+
+let dots=document.querySelectorAll(`#dots${i} span`)
+
+dots.forEach(d=>d.classList.remove("activo"))
+
+if(dots[index]) dots[index].classList.add("activo")
+
+}
+
+function verImagen(src){
+document.getElementById("modal").style.display="flex"
+document.getElementById("imgGrande").src=src
+}
+
+function cerrarImagen(){
+document.getElementById("modal").style.display="none"
+}
 
 function mas(i){
 let q=document.getElementById("q"+i)
