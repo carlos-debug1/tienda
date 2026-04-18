@@ -549,34 +549,6 @@ window.open("https://wa.me/5493815441312?text="+encodeURIComponent(texto))
 
 }
 
-/* PRODUCTOS */
-
-texto+="🛒 *DETALLE DEL PEDIDO*\n"
-
-for(let p in carrito){
-let item=carrito[p]
-texto+="• "+p+"  |  Cantidad: "+item.cantidad+"\n"
-}
-
-/* TOTAL */
-
-texto+="\n━━━━━━━━━━━━━━━\n"
-texto+="💰 *"+totalTexto+"*\n"
-texto+="━━━━━━━━━━━━━━━\n\n"
-
-/* MENSAJE FINAL */
-
-texto+="🙏 Gracias por confiar en nosotros\n"
-texto+="📩 En breve confirmaremos tu pedido"
-
-window.open("https://wa.me/5493815441312?text="+encodeURIComponent(texto))
-
-}
-
-function scrollTopSmooth(){
-window.scrollTo({top:0,behavior:'smooth'})
-}
-
 </script>
 
 </body>
